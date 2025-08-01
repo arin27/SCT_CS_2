@@ -35,14 +35,15 @@ The XOR (also called 'exclusive OR') operation is a mathematical operation, used
 
 EXAMPLE:
 
-for example, we have a byte with a value of 5 (binary 0101) and a key byte with a value of 10 (binary 1010). 
-Encryption: 5 XOR 10 = 15 (binary 1111).
-On XORing values (1010 and 1111) we obtain the binary value 5(0101).
-Decryption: 15 XOR 10 = 5.
-It gives back the original data.
+1) for example, we have a byte with a value of 5 (binary 0101) and a key byte with a value of 10 (binary 1010). 
+2) Encryption: 5 XOR 10 = 15 (binary 1111).
+3) On XORing values (1010 and 1111) we obtain the binary value 5(0101).
+4) Decryption: 15 XOR 10 = 5.
+5) It gives back the original data.
+  
 
-5 (0101) XOR 10 (1010) = 15 (1111)
-15 (1111) XOR 10 (1010) = 5 (0101)  # original value restored.
+6) 5 (0101) XOR 10 (1010) = 15 (1111)
+7) 15 (1111) XOR 10 (1010) = 5 (0101)  # original value restored.
 
 HOW TO RUN:
 
