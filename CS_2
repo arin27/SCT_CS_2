@@ -1,0 +1,91 @@
+from PIL import Image
+import numpy as np
+import tkinter as tk
+from tkinter import filedialog
+import os
+
+# Global variables
+original_img = None
+encrypted_img = None
+key_array = None
+
+def upload_image():
+    global original_img
+    file_path = filedialog.askopenfilename(
+        title="Select Image",
+        filetypes=[("Image Files", "*.png;*.jpg;*.jpeg;*.bmp")]
+    )
+    if file_path:
+        original_img = Image.open(file_path)
+        result_label.config(text="✅ Image uploaded successfully!")
+    else:
+        result_label.config(text="❌ No image selected!")
+
+def encrypt():
+    global original_img, encrypted_img, key_array
+    if original_img is None:
+        result_label.config(text="⚠️ Please upload an image first.")
+        return
+    image_array = np.array(original_img)
+    shape = image_array.shape
+
+    key_array = np.random.randint(0, 256, size=shape, dtype=np.uint8)
+    encrypted_array = np.bitwise_xor(image_array, key_array)
+    encrypted_img = Image.fromarray(encrypted_array)
+
+    encrypted_img.show()
+    encrypted_img.save("strong_encrypted_image.png")
+    result_label.config(text="🔐 Encrypted and saved!")
+
+def decrypt():
+    global encrypted_img, key_array
+    if encrypted_img is None or key_array is None:
+        result_label.config(text="⚠️ No encrypted image to decrypt.")
+        return
+    decrypted_array = np.bitwise_xor(np.array(encrypted_img), key_array)
+    decrypted_img = Image.fromarray(decrypted_array)
+    decrypted_img.show()
+    decrypted_img.save("strong_decrypted_image.png")
+    result_label.config(text="🔓 Decrypted and saved!")
+
+def clear_fields():
+    global original_img, encrypted_img, key_array
+    original_img = None
+    encrypted_img = None
+    key_array = None
+    result_label.config(text="🧼 Cleared all data!")
+
+# GUI setup
+window = tk.Tk()
+window.title("Secure Image Encryption Tool")
+window.geometry("500x420")
+window.configure(bg="#c5e3ed")  
+
+frame_bg = "#006D77"  
+btn_color = "#83C5BE"  
+font_family = "Segoe UI"
+
+frame = tk.Frame(window, bg=frame_bg, bd=4, relief="groove")
+frame.place(relx=0.5, rely=0.5, anchor="center", width=420, height=340)
+
+# Title
+tk.Label(frame, text="🔐 Image Encryption App", bg=frame_bg, fg="white", font=(font_family, 15, "bold")).pack(pady=(30, 20))
+
+# Buttons
+tk.Button(frame, text="Upload Image", command=upload_image, bg="#cb4154", fg="white",
+          font=("Segoe UI", 11, "bold"), cursor="hand2").pack(pady=5)
+
+tk.Button(frame, text="Encrypt", command=encrypt, bg="#cb4154", fg="white",
+          font=("Segoe UI", 11, "bold"), cursor="hand2").pack(pady=5)
+
+tk.Button(frame, text="Decrypt", command=decrypt, bg="#cb4154", fg="white",
+          font=("Segoe UI", 11, "bold"), cursor="hand2").pack(pady=5)
+
+tk.Button(frame, text="Clear", command=clear_fields, bg="#cb4154", fg="white",
+          font=("Segoe UI", 11, "bold"), cursor="hand2").pack(pady=5)
+
+# Result label
+result_label = tk.Label(frame, text="Upload an image to begin", bg=frame_bg, fg="white", font=(font_family, 12, "bold"))
+result_label.pack(pady=20)
+
+window.mainloop()
